@@ -24,13 +24,15 @@ class FinanceESG extends Page {
     const originalUrl = await browser.getUrl();
     const expectedUrl = 'https://www.sapfioneer.com/finance-esg/esg-kpi-engine/';
 
-    if (await this.mobileMenuButton.isDisplayed()) {
-      await this.mobileMenuButton.click();
-    }
     await this.productsTab.waitForExist({
       timeout: 30000,
       timeoutMsg: 'Products tab not found in DOM',
     });
+
+    if (await this.mobileMenuButton.isDisplayed()) {
+      await this.mobileMenuButton.click();
+    }
+
     await this.productsTab.waitForDisplayed({ timeout: 30000 });
     await this.productsTab.click();
 
