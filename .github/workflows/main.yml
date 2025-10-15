@@ -18,8 +18,8 @@ jobs:
       - name: 🧪 Test
         run: npm run test:local
         env:
-        CI: true
-        HEADLESS: true
+          CI: true
+          HEADLESS: true
         timeout-minutes: 10
 
       - name: 📦 Upload Logs
