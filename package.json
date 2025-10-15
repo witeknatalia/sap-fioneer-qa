@@ -1,0 +1,22 @@
+{
+  "name": "sap-fioneer-qa",
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^9.37.0",
+    "@types/mocha": "^10.0.10",
+    "@wdio/cli": "9.20.0",
+    "@wdio/local-runner": "9.20.0",
+    "@wdio/mocha-framework": "9.20.0",
+    "@wdio/spec-reporter": "9.20.0",
+    "eslint": "^9.37.0",
+    "globals": "^16.4.0",
+    "prettier": "3.6.2",
+    "typescript-eslint": "^8.46.1"
+  },
+  "scripts": {
+    "wdio:all": "wdio run ./wdio.conf.ts",
+    "wdio:spec": "wdio run wdio.conf.js --spec",
+    "wdio:docker": "wdio run ./wdio.docker.conf.ts",
+    "test:local": "wdio run wdio.local.conf.ts"
+  }
+}
