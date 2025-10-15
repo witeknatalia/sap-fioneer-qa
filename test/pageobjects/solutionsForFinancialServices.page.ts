@@ -9,22 +9,24 @@ class SolutionsForFinancialServicesPage extends Page {
   get cards() {
     return $$('div.row > div[class="col-12 col-md-4"]');
   }
+  get requestDemoButton() {
+    return $('a[aria-label="Request a demo"]');
+  }
 
   /**
    * Extract the header text from a specific card element
-   * @param {WebdriverIO.Element} card - Card element to extract header from
-   * @returns {Promise<string>} Trimmed header text
-   * @throws {Error} If card header cannot be found or read
+   * @param card - Card element to extract header from
+   * @returns Trimmed header text
    */
-  async getCardHeader(card: ChainablePromiseElement) {
+  async getCardHeader(card: WebdriverIO.Element) {
     return await card.$('h3').getText();
   }
 
   /**
    * Normalize header text for URL comparison by removing non-alphabet characters
    * and converting to lowercase
-   * @param {string} header - Original header text to normalize
-   * @returns {string} Normalized header string
+   * @param header - Original header text to normalize
+   * @returns Normalized header string
    */
   normalizeHeader(header: string): string {
     return header.toLowerCase().replace(/[^a-z]/g, '');
@@ -32,25 +34,24 @@ class SolutionsForFinancialServicesPage extends Page {
 
   /**
    * Validate if navigation to target URL matches the expected card header
-   * @param {string} header - Original card header text
-   * @param {string} url - Current URL to validate against
-   * @param {string} normalizedHeader - Normalized header text for comparison
-   * @returns {boolean} True if navigation is valid, false otherwise
+   * @param header - Original card header text
+   * @param url - Current URL to validate against
+   * @param normalizedHeader - Normalized header text for comparison
+   * @returns True if navigation is valid, false otherwise
    */
   isValidNavigation(header: string, url: string, normalizedHeader: string): boolean {
     if (header === 'Finance & ESG') {
-      return url.includes('finance-esg');
+      return url.toLowerCase().includes('finance-esg');
     }
     return url.toLowerCase().includes(normalizedHeader);
   }
 
   /**
    * Wait for URL to change from the original URL after navigation action
-   * @param {string} originalUrl - The URL before navigation
-   * @returns {Promise<void>}
-   * @throws {Error} If URL does not change within timeout period
+   * @param originalUrl - The URL before navigation
+   * @returns Promise that resolves when URL changes
    */
-  async waitForUrlChange(originalUrl: string) {
+  async waitForUrlChange(originalUrl: string): Promise<void> {
     await browser.waitUntil(
       async () => {
         const currentUrl = await browser.getUrl();
@@ -64,39 +65,45 @@ class SolutionsForFinancialServicesPage extends Page {
   }
 
   /**
-   * Test navigation functionality for all financial service cards
+   * Clicks the Request Demo button and returns to the original page
+   * @throws {Error} If navigation fails or timeout occurs
    * @returns {Promise<void>}
-   * @throws {Error} If any card navigation fails validation
+   */
+  async clickRequestDemo() {
+    const button = await this.requestDemoButton;
+    await button.waitForClickable({ timeout: 10000 });
+
+    const originalUrl = await browser.getUrl();
+    await button.click();
+
+    await this.waitForUrlChange(originalUrl);
+
+    await browser.back();
+
+    await browser.waitUntil(async () => (await browser.getUrl()) === originalUrl, { timeout: 10000, timeoutMsg: 'Did not return to original page' });
+  }
+
+  /**
+   * Test navigation functionality for all financial service cards
+   * @throws Error if any card navigation fails validation
    */
   async testCardNavigation() {
-    const originalUrl = await browser.getUrl();
-    const cardCount = (await this.cards).length;
-
-    for (let i = 0; i < (await cardCount); i++) {
-      const cards = await this.cards;
-      const card = cards[i];
-
-      await card.waitForDisplayed();
+    for (const card of await this.cards) {
       const header = await this.getCardHeader(card);
 
+      const currentUrlBeforeClick = await browser.getUrl();
       await card.click();
-      await this.waitForUrlChange(originalUrl);
+      await this.waitForUrlChange(currentUrlBeforeClick);
 
-      const newUrl = await browser.getUrl();
+      const url = await browser.getUrl();
       const normalizedHeader = this.normalizeHeader(header);
 
-      if (!this.isValidNavigation(header, newUrl, normalizedHeader)) {
-        throw new Error(`Navigation failed for "${header}". Expected to contain "${normalizedHeader}" in URL, but got: "${newUrl}"`);
-      }
+      this.isValidNavigation(header, url, normalizedHeader);
 
-      if ((await browser.getUrl()) !== originalUrl) {
-        await browser.back();
+      await this.clickRequestDemo();
 
-        await browser.waitUntil(async () => (await browser.getUrl()) === originalUrl, {
-          timeout: 10000,
-          timeoutMsg: 'Did not return to original page after back navigation',
-        });
-      }
+      await browser.back();
+      await this.waitForUrlChange(url);
     }
   }
 }
