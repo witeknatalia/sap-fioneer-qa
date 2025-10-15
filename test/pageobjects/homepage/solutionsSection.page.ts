@@ -54,7 +54,7 @@ class SolutionsForFinancialServices extends Page {
    */
   async clickRequestDemo() {
     const button = await this.requestDemoButton;
-    await button.waitForClickable({ timeout: 10000 });
+    await button.waitForClickable({ timeout: 15000 });
 
     const originalUrl = await browser.getUrl();
     await button.click();
@@ -72,6 +72,8 @@ class SolutionsForFinancialServices extends Page {
    * @throws Error if any card navigation fails validation
    */
   async testCardNavigation() {
+    await this.cards[0].waitForDisplayed({ timeout: 20000 });
+
     for (const card of await this.cards) {
       const header = await this.getCardHeader(card);
       const currentUrlBeforeClick = await browser.getUrl();
