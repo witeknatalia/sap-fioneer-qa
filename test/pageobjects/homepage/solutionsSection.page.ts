@@ -81,9 +81,9 @@ class SolutionsForFinancialServices extends Page {
 
       const url = await browser.getUrl();
       const normalizedHeader = this.normalizeHeader(header);
-      expect(await browser.getUrl()).toContain(normalizedHeader);
+      const isValid = this.isValidNavigation(header, url, normalizedHeader);
+      expect(isValid).toBe(true);
 
-      this.isValidNavigation(header, url, normalizedHeader);
       await this.clickRequestDemo();
 
       await browser.back();
