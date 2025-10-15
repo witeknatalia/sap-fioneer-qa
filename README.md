@@ -8,15 +8,21 @@ End-to-end test automation for SAP Fioneer website using WebdriverIO. This proje
 
 ### Installation
 
-npm install
+```bash
+  npm install
+```
 
 ### Run All Tests
 
-npm run wdio:all
+```bash
+  npm run wdio:all
+```
 
 ### Run Single Test Spec
 
-npm run wdio:spec ./test/specs/homepage/contactForm.e2e.ts
+```bash
+  npm run wdio:spec ./test/specs/homepage/contactForm.e2e.ts
+```
 
 ## 🛠️ Technical Notes
 
