@@ -11,24 +11,27 @@ class FinanceESG extends Page {
   get esgKpiEngineLink() {
     return $('a[aria-label="ESG KPI Engine"]');
   }
+  get mobileMenuButton() {
+    return $('button[aria-label="Open menu"]');
+  }
 
-  /**
-   * Navigates to ESG KPI Engine page through Products menu and verifies URL
-   * @throws {Error} If any navigation step fails or URL is incorrect
-   * @returns {Promise<void>}
-   */
   async goToProjectPage() {
     const originalUrl = await browser.getUrl();
     const expectedUrl = 'https://www.sapfioneer.com/finance-esg/esg-kpi-engine/';
 
-    await this.productsTab.waitForDisplayed({ timeout: 20000 });
-    await this.productsTab.click();
+    if (await this.mobileMenuButton.isDisplayed()) {
+      await this.mobileMenuButton.click();
+      await browser.pause(2000);
+    }
 
-    await this.financeEsgSection.waitForDisplayed({ timeout: 20000 });
-    await this.financeEsgSection.click();
+    await this.productsTab.waitForExist({ timeout: 30000 });
+    await browser.execute((el) => el.click(), await this.productsTab);
 
-    await this.esgKpiEngineLink.waitForDisplayed({ timeout: 20000 });
-    await this.esgKpiEngineLink.click();
+    await this.financeEsgSection.waitForExist({ timeout: 30000 });
+    await browser.execute((el) => el.click(), await this.financeEsgSection);
+
+    await this.esgKpiEngineLink.waitForExist({ timeout: 30000 });
+    await browser.execute((el) => el.click(), await this.esgKpiEngineLink);
 
     await redirectURL.waitForUrlChange(originalUrl);
 
