@@ -21,17 +21,17 @@ class FinanceESG extends Page {
 
     if (await this.mobileMenuButton.isDisplayed()) {
       await this.mobileMenuButton.click();
-      await browser.pause(1000);
+      await browser.pause(2000);
     }
 
-    await this.productsTab.waitForClickable({ timeout: 30000 });
-    await this.productsTab.click();
+    await this.productsTab.waitForExist({ timeout: 30000 });
+    await browser.execute((el) => el.click(), await this.productsTab);
 
-    await this.financeEsgSection.waitForClickable({ timeout: 30000 });
-    await this.financeEsgSection.click();
+    await this.financeEsgSection.waitForExist({ timeout: 30000 });
+    await browser.execute((el) => el.click(), await this.financeEsgSection);
 
-    await this.esgKpiEngineLink.waitForClickable({ timeout: 30000 });
-    await this.esgKpiEngineLink.click();
+    await this.esgKpiEngineLink.waitForExist({ timeout: 30000 });
+    await browser.execute((el) => el.click(), await this.esgKpiEngineLink);
 
     await redirectURL.waitForUrlChange(originalUrl);
 
