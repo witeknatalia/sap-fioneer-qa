@@ -31,12 +31,13 @@ class ProductsPage extends Page {
     const originalUrl = await browser.getUrl();
     const expectedUrl = 'https://www.sapfioneer.com/finance-esg/esg-kpi-engine/';
 
+    await this.productsTab.waitForDisplayed({ timeout: 10000 });
     await this.productsTab.click();
 
-    await this.financeEsgSection.waitForClickable({ timeout: 10000 });
+    await this.financeEsgSection.waitForDisplayed({ timeout: 10000 });
     await this.financeEsgSection.click();
 
-    await this.esgKpiEngineLink.waitForClickable({ timeout: 10000 });
+    await this.esgKpiEngineLink.waitForDisplayed({ timeout: 10000 });
     await this.esgKpiEngineLink.click();
 
     await this.waitForUrlChange(originalUrl);
