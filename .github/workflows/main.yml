@@ -17,6 +17,10 @@ jobs:
 
       - name: 🧪 Test
         run: npm run test:local
+        env:
+        CI: true
+        HEADLESS: true
+        timeout-minutes: 10
 
       - name: 📦 Upload Logs
         uses: actions/upload-artifact@v4
@@ -24,10 +28,3 @@ jobs:
         with:
           name: logs
           path: logs
-
-      - name: Upload screenshots
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-screenshots
-          path: ./*.png
