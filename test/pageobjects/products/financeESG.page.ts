@@ -22,6 +22,7 @@ class FinanceESG extends Page {
     const expectedUrl = 'https://www.sapfioneer.com/finance-esg/esg-kpi-engine/';
 
     await this.productsTab.scrollIntoView();
+    await this.productsTab.waitForClickable({ timeout: 20000 });
     await this.productsTab.click();
 
     await this.financeEsgSection.waitForDisplayed({ timeout: 20000 });
