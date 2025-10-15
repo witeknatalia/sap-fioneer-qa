@@ -11,6 +11,9 @@ class FinanceESG extends Page {
   get esgKpiEngineLink() {
     return $('a[aria-label="ESG KPI Engine"]');
   }
+  get mobileMenuButton() {
+    return $('button[aria-label="Open menu"]');
+  }
 
   /**
    * Navigates to ESG KPI Engine page through Products menu and verifies URL
@@ -21,8 +24,10 @@ class FinanceESG extends Page {
     const originalUrl = await browser.getUrl();
     const expectedUrl = 'https://www.sapfioneer.com/finance-esg/esg-kpi-engine/';
 
-    await this.productsTab.scrollIntoView();
-    await this.productsTab.waitForClickable({ timeout: 20000 });
+    if (await this.mobileMenuButton.isDisplayed()) {
+      await this.mobileMenuButton.click();
+    }
+    await this.productsTab.waitForDisplayed({ timeout: 20000 });
     await this.productsTab.click();
 
     await this.financeEsgSection.waitForDisplayed({ timeout: 20000 });
