@@ -1,6 +1,7 @@
-import Page from './page.ts';
+import Page from '../page.ts';
+import redirectURL from '../redirectURL.page.ts';
 
-class SolutionsForFinancialServicesPage extends Page {
+class SolutionsForFinancialServices extends Page {
   /**
    * NOTE: Selectors are fragile due to lack of test attributes.
    * In real project we would add data-testid attributes.
@@ -47,24 +48,6 @@ class SolutionsForFinancialServicesPage extends Page {
   }
 
   /**
-   * Wait for URL to change from the original URL after navigation action
-   * @param originalUrl - The URL before navigation
-   * @returns Promise that resolves when URL changes
-   */
-  async waitForUrlChange(originalUrl: string): Promise<void> {
-    await browser.waitUntil(
-      async () => {
-        const currentUrl = await browser.getUrl();
-        return currentUrl !== originalUrl;
-      },
-      {
-        timeout: 10000,
-        timeoutMsg: 'URL did not change after clicking card',
-      },
-    );
-  }
-
-  /**
    * Clicks the Request Demo button and returns to the original page
    * @throws {Error} If navigation fails or timeout occurs
    * @returns {Promise<void>}
@@ -76,11 +59,12 @@ class SolutionsForFinancialServicesPage extends Page {
     const originalUrl = await browser.getUrl();
     await button.click();
 
-    await this.waitForUrlChange(originalUrl);
+    await redirectURL.waitForUrlChange(originalUrl);
+    expect(await browser.getUrl()).toContain('request-a-demo');
 
     await browser.back();
-
     await browser.waitUntil(async () => (await browser.getUrl()) === originalUrl, { timeout: 10000, timeoutMsg: 'Did not return to original page' });
+    expect(await browser.getUrl()).toBe(originalUrl);
   }
 
   /**
@@ -90,22 +74,23 @@ class SolutionsForFinancialServicesPage extends Page {
   async testCardNavigation() {
     for (const card of await this.cards) {
       const header = await this.getCardHeader(card);
-
       const currentUrlBeforeClick = await browser.getUrl();
+
       await card.click();
-      await this.waitForUrlChange(currentUrlBeforeClick);
+      await redirectURL.waitForUrlChange(currentUrlBeforeClick);
 
       const url = await browser.getUrl();
       const normalizedHeader = this.normalizeHeader(header);
-
-      this.isValidNavigation(header, url, normalizedHeader);
+      const isValid = this.isValidNavigation(header, url, normalizedHeader);
+      expect(isValid).toBe(true);
 
       await this.clickRequestDemo();
 
       await browser.back();
-      await this.waitForUrlChange(url);
+      await redirectURL.waitForUrlChange(url);
+      expect(await browser.getUrl()).toBe(currentUrlBeforeClick);
     }
   }
 }
 
-export default new SolutionsForFinancialServicesPage();
+export default new SolutionsForFinancialServices();

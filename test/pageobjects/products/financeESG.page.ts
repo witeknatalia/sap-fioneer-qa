@@ -1,6 +1,7 @@
-import Page from './page.ts';
+import Page from '../page.ts';
+import redirectURL from '../redirectURL.page.ts';
 
-class ProductsPage extends Page {
+class FinanceESG extends Page {
   get productsTab() {
     return $('//button[contains(@class, "menu-item__link")]//span[text()="Products"]');
   }
@@ -9,17 +10,6 @@ class ProductsPage extends Page {
   }
   get esgKpiEngineLink() {
     return $('a[aria-label="ESG KPI Engine"]');
-  }
-
-  /**
-   * Wait for URL to change from original URL
-   * @param originalUrl - URL before navigation
-   */
-  async waitForUrlChange(originalUrl: string) {
-    await browser.waitUntil(async () => (await browser.getUrl()) !== originalUrl, {
-      timeout: 10000,
-      timeoutMsg: 'URL did not change after navigation',
-    });
   }
 
   /**
@@ -40,15 +30,11 @@ class ProductsPage extends Page {
     await this.esgKpiEngineLink.waitForDisplayed({ timeout: 20000 });
     await this.esgKpiEngineLink.click();
 
-    await this.waitForUrlChange(originalUrl);
+    await redirectURL.waitForUrlChange(originalUrl);
 
     const actualUrl = await browser.getUrl();
-    if (actualUrl !== expectedUrl) {
-      throw new Error(`Navigation failed! Expected: "${expectedUrl}", but got: "${actualUrl}"`);
-    }
-
-    console.log('✓ Successfully navigated to ESG KPI Engine page');
+    expect(actualUrl).toBe(expectedUrl);
   }
 }
 
-export default new ProductsPage();
+export default new FinanceESG();
