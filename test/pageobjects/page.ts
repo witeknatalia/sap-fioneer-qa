@@ -15,7 +15,7 @@ export default class Page {
 
   public async closeCookieBanner() {
     const rejectButton = await $('[data-cky-tag="reject-button"]');
-
+    await browser.pause(1000);
     if (await rejectButton.isDisplayed()) {
       await rejectButton.click();
     } else {
