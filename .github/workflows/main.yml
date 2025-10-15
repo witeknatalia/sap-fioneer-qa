@@ -3,9 +3,6 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      USER.LOGIN: ${{ secrets.USER_STANDARD_LOGIN }}
-      USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
     steps:
       - name: ⬇️ Checkout Code
         uses: actions/checkout@v4
@@ -13,7 +10,7 @@ jobs:
       - name: 🐢 Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "23.8.0"
+          node-version: '23.8.0'
 
       - name: 🏗️ Install Dependencies
         run: npm install
