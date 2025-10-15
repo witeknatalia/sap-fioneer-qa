@@ -21,5 +21,6 @@ export default class Page {
     } else {
       console.log('No cookie banner found or already closed');
     }
+    await rejectButton.waitForDisplayed({ timeout: 25000, reverse: true });
   }
 }
