@@ -15,31 +15,21 @@ class FinanceESG extends Page {
     return $('button[aria-label="Open menu"]');
   }
 
-  /**
-   * Navigates to ESG KPI Engine page through Products menu and verifies URL
-   * @throws {Error} If any navigation step fails or URL is incorrect
-   * @returns {Promise<void>}
-   */
   async goToProjectPage() {
     const originalUrl = await browser.getUrl();
     const expectedUrl = 'https://www.sapfioneer.com/finance-esg/esg-kpi-engine/';
-
-    await this.productsTab.waitForExist({
-      timeout: 30000,
-      timeoutMsg: 'Products tab not found in DOM',
-    });
 
     if (await this.mobileMenuButton.isDisplayed()) {
       await this.mobileMenuButton.click();
     }
 
-    await this.productsTab.waitForDisplayed({ timeout: 30000 });
+    await this.productsTab.waitForExist({ timeout: 30000 });
     await this.productsTab.click();
 
-    await this.financeEsgSection.waitForDisplayed({ timeout: 30000 });
+    await this.financeEsgSection.waitForExist({ timeout: 30000 });
     await this.financeEsgSection.click();
 
-    await this.esgKpiEngineLink.waitForDisplayed({ timeout: 30000 });
+    await this.esgKpiEngineLink.waitForExist({ timeout: 30000 });
     await this.esgKpiEngineLink.click();
 
     await redirectURL.waitForUrlChange(originalUrl);
