@@ -1,10 +1,10 @@
-import productsPage from '../pageobjects/products.page';
+import financeESG from '../../pageobjects/products/financeESG.page';
 
 describe('Redirect user to product page', () => {
   before(async () => {
-    await productsPage.open('/');
+    await financeESG.open('');
   });
   it('should verify card navigation', async () => {
-    await productsPage.goToProjectPage();
+    await financeESG.goToProjectPage();
   });
 });
