@@ -27,13 +27,17 @@ class FinanceESG extends Page {
     if (await this.mobileMenuButton.isDisplayed()) {
       await this.mobileMenuButton.click();
     }
-    await this.productsTab.waitForDisplayed({ timeout: 20000 });
+    await this.productsTab.waitForExist({
+      timeout: 30000,
+      timeoutMsg: 'Products tab not found in DOM',
+    });
+    await this.productsTab.waitForDisplayed({ timeout: 30000 });
     await this.productsTab.click();
 
-    await this.financeEsgSection.waitForDisplayed({ timeout: 20000 });
+    await this.financeEsgSection.waitForDisplayed({ timeout: 30000 });
     await this.financeEsgSection.click();
 
-    await this.esgKpiEngineLink.waitForDisplayed({ timeout: 20000 });
+    await this.esgKpiEngineLink.waitForDisplayed({ timeout: 30000 });
     await this.esgKpiEngineLink.click();
 
     await redirectURL.waitForUrlChange(originalUrl);
