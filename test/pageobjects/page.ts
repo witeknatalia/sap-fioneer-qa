@@ -12,4 +12,14 @@ export default class Page {
   public open(path: string) {
     return browser.url(`https://www.sapfioneer.com/${path}`);
   }
+
+  public async closeCookieBanner() {
+    const rejectButton = await $('[data-cky-tag="reject-button"]');
+
+    if (await rejectButton.isDisplayed()) {
+      await rejectButton.click();
+    } else {
+      console.log('No cookie banner found or already closed');
+    }
+  }
 }
